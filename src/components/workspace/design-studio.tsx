@@ -67,7 +67,7 @@ export function DesignStudio({ page, onNavigate }: { page: string; onNavigate: (
   const [frames, setFrames] = useState(initialFrames);
   const [frameId, setFrameId] = useState(initialFrames[0]!.id);
   const [layerId, setLayerId] = useState(initialFrames[0]!.root.id);
-  const update = (patch: Partial<Layer>) => setFrames(fs => fs.map(f => f.id !== frameId ? f : { ...f, root: f.root.id === layerId ? { ...f.root, ...patch } : { ...f.root, children: f.root.children?.map(c => c.id === layerId ? { ...c, ...patch } : c) } }));
+  const update = (patch: Partial<Layer>) => setFrames(fs => fs.map(f => f.id !== frameId ? f : { ...f, root: f.root.id === layerId ? { ...f.root, ...patch } : { ...f.root, children: (f.root.children ?? []).map(c => c.id === layerId ? { ...c, ...patch } : c) } }));
   const reset = () => setFrames(fs => fs.map(f => f.id === frameId ? initialFrames.find(i => i.id === frameId)! : f));
   const [approved, setApproved] = useState<string[]>([]);
   const frame = frames.find(f => f.id === frameId)!;
