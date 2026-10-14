@@ -9,3 +9,7 @@
 - [x] Remove Kemet OS / Workspace toggle and redundant module tabs.
 - [x] Give network, builds, operations, research, and kernel records purpose-specific layouts.
 - [x] Connect related pages without duplicate content; verify selection and search.
+## Enterprise refinement
+- [x] Import apt-canvas-forge code from GitHub.
+- [x] Add Studio module: frames → layers/properties → generated React component, tokens export, handoff review.
+- [x] Legibility pass on micro-labels.
