@@ -16,6 +16,7 @@ export function ModuleSurface({ module, page, selected, onSelect, onNavigate }: 
  const filtered = records.filter(r => `${r.name} ${r.type} ${r.detail}`.toLowerCase().includes(filter.toLowerCase()));
  const select = (r: WorkspaceRecord) => ({onClick:() => onSelect(r),'aria-pressed':selected === r.id});
  const related: Record<ModuleName, {module:ModuleName; page:string; label:string}[]> = {
+  Studio: [],
   Kernel:[{module:'Network',page:'Nodes',label:'Connected nodes'},{module:'Builds',page:'Registry',label:'Protocol implementations'}],
   Network:[{module:'Kernel',page:'Identity',label:'Peer identities'},{module:'Operations',page:'Health',label:'Service health'}],
   Builds:[{module:'Research',page:'Library',label:'Source research'},{module:'Operations',page:'Transactions',label:'Mint transactions'}],

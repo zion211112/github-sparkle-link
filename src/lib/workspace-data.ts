@@ -1,4 +1,4 @@
-import { Boxes, Network, Hammer, Activity, FlaskConical } from 'lucide-react';
+import { Boxes, Network, Hammer, Activity, FlaskConical, PenTool } from 'lucide-react';
 
 export const modules = [
   { name: 'Kernel', icon: Boxes, code: '01', pages: ['Overview', 'Identity', 'Protocols', 'Permissions'] },
@@ -6,6 +6,7 @@ export const modules = [
   { name: 'Builds', icon: Hammer, code: '03', pages: ['Registry', 'Artifacts', 'Pipelines'] },
   { name: 'Operations', icon: Activity, code: '04', pages: ['Activity', 'Transactions', 'Health'] },
   { name: 'Research', icon: FlaskConical, code: '05', pages: ['Library', 'Experiments', 'Notes'] },
+  { name: 'Studio', icon: PenTool, code: '06', pages: ['Frames', 'Tokens', 'Handoff'] },
 ] as const;
 export type ModuleName = typeof modules[number]['name'];
 export const ledger = [

@@ -7,9 +7,11 @@ export const moduleInfo: Record<ModuleName, { description: string; namespace: st
   Network: { description: 'Peer discovery, trusted connections, and shared state.', namespace: 'apt.network', metric: 'CONNECTED PEERS', count: '12' },
   Builds: { description: 'Reproducible artifacts. Verifiable contributions.', namespace: 'apt.builds', metric: 'ARTIFACTS MINTED', count: '08' },
   Operations: { description: 'Execution, transactions, and the pulse of the network.', namespace: 'apt.operations', metric: 'COMPLETED OPERATIONS', count: '142' },
+  Studio: { description: 'Design frames to typed React components, in one minimal flow.', namespace: 'apt.studio', metric: 'FRAMES', count: '04' },
   Research: { description: 'Shared knowledge, open questions, and new possibilities.', namespace: 'apt.research', metric: 'ACTIVE THREADS', count: '03' },
 };
 export const moduleRecords: Record<ModuleName, Record<string, WorkspaceRecord[]>> = {
+  Studio: {},
   Kernel: {
     Identity: [record('DID-001','angri.mainyu','OPERATOR','Verified','did:apt:angri.mainyu','Owner'),record('DID-002','system.kernel','SERVICE','Verified','did:apt:system.kernel','Service'),record('DID-003','node.athena','NODE','Verified','did:apt:node.athena','Peer')],
     Protocols: [record('PRT-001','Proof of useful work','CONSENSUS','Active','Contribution verification protocol','v0.4.2'),record('PRT-002','Identity resolution','IDENTITY','Active','Decentralized identity registry','v0.3.1'),record('PRT-003','Artifact attestation','ARTIFACT','Active','Signed build provenance','v0.2.0'),record('PRT-004','Peer discovery','NETWORK','Active','Trusted peer coordination','v0.4.0'),record('PRT-005','Ledger settlement','LEDGER','Active','Finalization and settlement','v0.3.2'),record('PRT-006','Research attribution','RESEARCH','Active','Source and contributor tracking','v0.1.4')],
