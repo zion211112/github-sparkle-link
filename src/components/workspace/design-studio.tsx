@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 type Layer = { id: string; name: string; kind: 'frame' | 'text' | 'button' | 'box'; text?: string; dir?: 'row' | 'col'; gap?: number; pad?: number; children?: Layer[] };
 type DesignFrame = { id: string; name: string; size: string; root: Layer };
 
-const frames: DesignFrame[] = [
+const initialFrames: DesignFrame[] = [
   { id: 'FRM-01', name: 'MetricCard', size: '320 × 140', root: { id: 'card', name: 'MetricCard', kind: 'frame', dir: 'col', gap: 8, pad: 16, children: [
     { id: 'label', name: 'Label', kind: 'text', text: 'Useful work' },
     { id: 'value', name: 'Value', kind: 'text', text: '1,284 APT' },
@@ -64,8 +64,11 @@ function CopyButton({ text, label = 'Copy' }: { text: string; label?: string }) 
 const kindIcon = { frame: Frame, text: Type, button: MousePointer2, box: Square };
 
 export function DesignStudio({ page, onNavigate }: { page: string; onNavigate: (page: string) => void }) {
-  const [frameId, setFrameId] = useState(frames[0]!.id);
-  const [layerId, setLayerId] = useState(frames[0]!.root.id);
+  const [frames, setFrames] = useState(initialFrames);
+  const [frameId, setFrameId] = useState(initialFrames[0]!.id);
+  const [layerId, setLayerId] = useState(initialFrames[0]!.root.id);
+  const update = (patch: Partial<Layer>) => setFrames(fs => fs.map(f => f.id !== frameId ? f : { ...f, root: f.root.id === layerId ? { ...f.root, ...patch } : { ...f.root, children: f.root.children?.map(c => c.id === layerId ? { ...c, ...patch } : c) } }));
+  const reset = () => setFrames(fs => fs.map(f => f.id === frameId ? initialFrames.find(i => i.id === frameId)! : f));
   const [approved, setApproved] = useState<string[]>([]);
   const frame = frames.find(f => f.id === frameId)!;
   const code = useMemo(() => generateComponent(frame), [frame]);
@@ -98,11 +101,12 @@ export function DesignStudio({ page, onNavigate }: { page: string; onNavigate: (
     <div className="studio-grid">
       <div className="studio-layers"><div className="studio-label">LAYERS</div>{layers.map((l, i) => { const Icon = kindIcon[l.kind]; return <button key={l.id} className={`studio-layer ${l.id === layerId ? 'selected' : ''}`} style={{ paddingLeft: i === 0 ? 10 : 26 }} onClick={() => setLayerId(l.id)}><Icon size={12} />{l.name}</button>; })}
         <div className="studio-label">PROPERTIES</div>
-        <dl className="studio-props"><dt>Type</dt><dd>{layer.kind}</dd>{layer.dir && <><dt>Layout</dt><dd>{layer.dir === 'row' ? 'Horizontal' : 'Vertical'}</dd><dt>Gap</dt><dd>{layer.gap}px</dd><dt>Padding</dt><dd>{layer.pad}px</dd></>}{layer.text && <><dt>Content</dt><dd>{layer.text}</dd></>}</dl>
+        <dl className="studio-props"><dt>Type</dt><dd>{layer.kind}</dd>{layer.dir && <><dt>Layout</dt><dd><button className="studio-toggle" onClick={() => update({ dir: layer.dir === 'row' ? 'col' : 'row' })}>{layer.dir === 'row' ? 'Horizontal' : 'Vertical'}</button></dd><dt>Gap</dt><dd><input aria-label="Gap" className="studio-input" type="number" min={0} max={48} step={4} value={layer.gap} onChange={e => update({ gap: Math.max(0, Math.min(48, Number(e.target.value))) })} /></dd><dt>Padding</dt><dd><input aria-label="Padding" className="studio-input" type="number" min={0} max={48} step={4} value={layer.pad} onChange={e => update({ pad: Math.max(0, Math.min(48, Number(e.target.value))) })} /></dd></>}{layer.text !== undefined && <><dt>Content</dt><dd><input aria-label="Content" className="studio-input wide" value={layer.text} maxLength={60} onChange={e => update({ text: e.target.value })} /></dd></>}</dl>
+        <button className="studio-reset" onClick={reset}>Reset frame</button>
       </div>
       <div className="studio-canvas" onClick={() => setLayerId(frame.root.id)}><Preview layer={frame.root} selected={layerId} onSelect={setLayerId} /></div>
     </div>
-    <div className="section-heading"><h2>{frame.name}.tsx</h2><CopyButton text={code} label="Copy component" /></div>
+    <div className="section-heading"><h2>{frame.name}.tsx <span className="studio-live"><span className="live-dot" />Live from canvas</span></h2><CopyButton text={code} label="Copy component" /></div>
     <pre className="studio-code"><code>{code}</code></pre>
   </section>;
 }
