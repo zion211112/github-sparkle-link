@@ -64,8 +64,8 @@ function CopyButton({ text, label = 'Copy' }: { text: string; label?: string }) 
 const kindIcon = { frame: Frame, text: Type, button: MousePointer2, box: Square };
 
 export function DesignStudio({ page, onNavigate }: { page: string; onNavigate: (page: string) => void }) {
-  const [frameId, setFrameId] = useState(frames[0].id);
-  const [layerId, setLayerId] = useState(frames[0].root.id);
+  const [frameId, setFrameId] = useState(frames[0]!.id);
+  const [layerId, setLayerId] = useState(frames[0]!.root.id);
   const [approved, setApproved] = useState<string[]>([]);
   const frame = frames.find(f => f.id === frameId)!;
   const code = useMemo(() => generateComponent(frame), [frame]);
