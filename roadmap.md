@@ -13,3 +13,4 @@
 - [x] Import apt-canvas-forge code from GitHub.
 - [x] Add Studio module: frames → layers/properties → generated React component, tokens export, handoff review.
 - [x] Legibility pass on micro-labels.
+- [x] End-to-end ship flow: approve frames → staged checks → ledger record.

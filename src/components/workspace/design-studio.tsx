@@ -63,7 +63,12 @@ function CopyButton({ text, label = 'Copy' }: { text: string; label?: string }) 
 
 const kindIcon = { frame: Frame, text: Type, button: MousePointer2, box: Square };
 
-export function DesignStudio({ page, onNavigate }: { page: string; onNavigate: (page: string) => void }) {
+const shipSteps = ['Compile TSX', 'Type check', 'Token lint', 'Sign artifact', 'Record on ledger'];
+function hashOf(text: string) { let h = 2166136261; for (const c of text) h = Math.imul(h ^ c.charCodeAt(0), 16777619); const x = (h >>> 0).toString(16).padStart(8, '0'); return `0x${x.slice(0, 4)}…${x.slice(4)}`; }
+
+export function DesignStudio({ page, onNavigate, onShip }: { page: string; onNavigate: (page: string) => void; onShip?: (name: string, hash: string) => void }) {
+  const [step, setStep] = useState(-1);
+  const [shipped, setShipped] = useState<string | null>(null);
   const [frames, setFrames] = useState(initialFrames);
   const [frameId, setFrameId] = useState(initialFrames[0]!.id);
   const [layerId, setLayerId] = useState(initialFrames[0]!.root.id);
@@ -93,6 +98,17 @@ export function DesignStudio({ page, onNavigate }: { page: string; onNavigate: (
         <Button variant="ghost" size="sm" onClick={() => { setFrameId(f.id); setLayerId(f.root.id); onNavigate('Frames'); }}>Inspect<ArrowRight size={12} /></Button>
         <Button variant={ok ? 'outline' : 'default'} size="sm" onClick={() => setApproved(a => ok ? a.filter(x => x !== f.id) : [...a, f.id])}>{ok ? <><Check size={13} />Approved</> : 'Approve'}</Button>
       </div>; })}</div>
+      <div className="studio-ship">
+        <div className="section-heading"><h2>Ship</h2><span className="mono">{shipped ? `RECORDED ${shipped}` : step >= 0 ? `${step}/${shipSteps.length}` : 'READY WHEN APPROVED'}</span></div>
+        <ol className="studio-steps">{shipSteps.map((s, i) => <li key={s} className={step > i || shipped ? 'done' : step === i ? 'running' : ''}><span>{step > i || shipped ? <Check size={12} /> : String(i + 1).padStart(2, '0')}</span>{s}</li>)}</ol>
+        <Button disabled={approved.length !== frames.length || step >= 0 || !!shipped} onClick={() => {
+          const bundle = frames.map(generateComponent).join('\n'); const h = hashOf(bundle);
+          let i = 0; setStep(0);
+          const tick = () => { i += 1; setStep(i); if (i < shipSteps.length) setTimeout(tick, 420); else { setShipped(h); setStep(-1); onShip?.(`${frames.length} components`, h); } };
+          setTimeout(tick, 420);
+        }}>{shipped ? <><Check size={13} />Shipped</> : step >= 0 ? 'Shipping…' : `Ship ${frames.length} components`}<ArrowRight size={12} /></Button>
+        <p className="studio-note">Runs locally in this preview. The hash is derived from the generated code, so any edit produces a new record.</p>
+      </div>
     </section>;
   }
 
