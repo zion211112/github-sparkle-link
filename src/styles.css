@@ -143,3 +143,11 @@
 .studio-reset:hover { color: var(--foreground); border-color: var(--faint); }
 .studio-live { display: inline-flex; align-items: center; gap: 6px; margin-left: 10px; font: 10px var(--font-mono); color: var(--primary); vertical-align: middle; }
 .studio-canvas .studio-frame { transition: gap .2s, padding .2s; }
+.studio-ship{margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border);display:grid;gap:1rem}
+.studio-steps{display:grid;grid-template-columns:repeat(5,1fr);gap:.5rem;list-style:none;padding:0;margin:0}
+.studio-steps li{display:flex;align-items:center;gap:.5rem;padding:.6rem .7rem;border:1px solid var(--border);border-radius:.5rem;font-size:.75rem;color:var(--muted-foreground);transition:all .25s}
+.studio-steps li>span{font-family:'IBM Plex Mono',monospace;font-size:.7rem;display:inline-flex}
+.studio-steps li.running{color:var(--foreground);border-color:var(--primary)}
+.studio-steps li.done{color:var(--primary);border-color:color-mix(in oklab,var(--primary) 40%,transparent)}
+.studio-ship>button{justify-self:start}
+@media (max-width:900px){.studio-steps{grid-template-columns:1fr 1fr}}
